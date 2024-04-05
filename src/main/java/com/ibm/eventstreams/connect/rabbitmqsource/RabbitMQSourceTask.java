@@ -5,9 +5,12 @@ import com.ibm.eventstreams.connect.rabbitmqsource.schema.EnvelopeSchema;
 import com.ibm.eventstreams.connect.rabbitmqsource.sourcerecord.SourceRecordConcurrentLinkedQueue;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.kafka.connect.errors.ConnectException;
@@ -30,6 +33,10 @@ public class RabbitMQSourceTask extends SourceTask {
 
     private Channel channel;
     private Connection connection;
+
+    private Map<String, String> offsets;
+
+    private Long offsetValue;
 
     /**
      * Get the version of this task. Usually this should be the same as the corresponding {@link Connector} class's version.
@@ -64,12 +71,23 @@ public class RabbitMQSourceTask extends SourceTask {
             throw new ConnectException(e);
         }
 
+        offsets = new HashMap<>();
+
         for (String queue : this.config.queues) {
             try {
+                offsets.put(EnvelopeSchema.FIELD_ROUTINGKEY, queue);
+                if (this.context.offsetStorageReader().offset(offsets) != null) {
+                    this.context.offsetStorageReader().offset(offsets).forEach((key, value) -> {
+                        log.info("Offset Key: {}", key);
+                        log.info("Offset Value: {}", value);
+                    });
+                    offsetValue = (Long) this.context.offsetStorageReader().offset(offsets).get(EnvelopeSchema.FIELD_DELIVERYTAG);
+                }
+                log.info("Offset value: {}", offsetValue);
                 log.info("Setting channel.basicQos({}, {});", this.config.prefetchCount, this.config.prefetchGlobal);
                 this.channel.basicQos(this.config.prefetchCount, this.config.prefetchGlobal);
                 log.info("Starting consumer");
-                this.channel.basicConsume(queue, consumer);
+                this.channel.basicConsume(queue, false, Collections.singletonMap("x-stream-offset", Objects.requireNonNullElse(offsetValue, "first")), consumer);
             } catch (IOException ex) {
                 throw new ConnectException(ex);
             }

@@ -87,8 +87,8 @@ public class RabbitMQSourceRecordFactory {
 
     public SourceRecord makeSourceRecord(String consumerTag, Envelope envelope, AMQP.BasicProperties basicProperties, byte[] bytes) {
         final String topic = this.config.kafkaTopic;
-        final Map<String, ?> sourcePartition = ImmutableMap.of(EnvelopeSchema.FIELD_ROUTINGKEY, envelope.getRoutingKey());
-        final Map<String, ?> sourceOffset = ImmutableMap.of(EnvelopeSchema.FIELD_DELIVERYTAG, envelope.getDeliveryTag());
+        final Map<String, ?> sourcePartition = Collections.singletonMap(EnvelopeSchema.FIELD_ROUTINGKEY, envelope.getRoutingKey());
+        final Map<String, ?> sourceOffset = Collections.singletonMap(EnvelopeSchema.FIELD_DELIVERYTAG, envelope.getDeliveryTag());
 
         Object key = null;
         if (basicProperties.getHeaders() != null){
