@@ -1,4 +1,4 @@
-package com.ibm.eventstreams.connect.rabbitmqsource.sourcerecord;
+package com.zyston.eventstreams.connect.rabbitmqsource.sourcerecord;
 
 import org.apache.kafka.connect.source.SourceRecord;
 import org.slf4j.Logger;

@@ -4,16 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ibm.eventstreams.connect</groupId>
+    <groupId>com.zyston.eventstreams.connect</groupId>
     <artifactId>kafka-connect-rabbitmq-source</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>kafka-connect-rabbitmq-source</name>
     <organization>
-        <name>IBM Corporation</name>
-        <url>http://ibm.com</url>
+        <name>Zyston</name>
+        <url>http://zyston.com</url>
     </organization>
-    <url>http://ibm.com</url>
+    <url>http://zyston.com</url>
     <description>
         A Kafka Connect connector for copying data from RabbitMQ into Apache Kafka.
     </description>
@@ -50,7 +50,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        com.ibm.eventstreams.connect.rabbitmqsource.RabbitMQSourceConnector
+                                        com.zyston.eventstreams.connect.rabbitmqsource.RabbitMQSourceConnector
                                     </mainClass>
                                 </manifest>
                             </archive>

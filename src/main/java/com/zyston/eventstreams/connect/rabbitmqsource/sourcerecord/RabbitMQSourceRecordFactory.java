@@ -1,10 +1,9 @@
-package com.ibm.eventstreams.connect.rabbitmqsource.sourcerecord;
+package com.zyston.eventstreams.connect.rabbitmqsource.sourcerecord;
 
-import com.google.common.collect.ImmutableMap;
-import com.ibm.eventstreams.connect.rabbitmqsource.config.RabbitMQSourceConnectorConfig;
-import com.ibm.eventstreams.connect.rabbitmqsource.schema.EnvelopeSchema;
-import com.ibm.eventstreams.connect.rabbitmqsource.schema.KeySchema;
-import com.ibm.eventstreams.connect.rabbitmqsource.schema.ValueSchema;
+import com.zyston.eventstreams.connect.rabbitmqsource.config.RabbitMQSourceConnectorConfig;
+import com.zyston.eventstreams.connect.rabbitmqsource.schema.EnvelopeSchema;
+import com.zyston.eventstreams.connect.rabbitmqsource.schema.KeySchema;
+import com.zyston.eventstreams.connect.rabbitmqsource.schema.ValueSchema;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.LongString;

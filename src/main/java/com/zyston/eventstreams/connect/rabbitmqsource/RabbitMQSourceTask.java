@@ -1,8 +1,8 @@
-package com.ibm.eventstreams.connect.rabbitmqsource;
+package com.zyston.eventstreams.connect.rabbitmqsource;
 
-import com.ibm.eventstreams.connect.rabbitmqsource.config.RabbitMQSourceConnectorConfig;
-import com.ibm.eventstreams.connect.rabbitmqsource.schema.EnvelopeSchema;
-import com.ibm.eventstreams.connect.rabbitmqsource.sourcerecord.SourceRecordConcurrentLinkedQueue;
+import com.zyston.eventstreams.connect.rabbitmqsource.config.RabbitMQSourceConnectorConfig;
+import com.zyston.eventstreams.connect.rabbitmqsource.schema.EnvelopeSchema;
+import com.zyston.eventstreams.connect.rabbitmqsource.sourcerecord.SourceRecordConcurrentLinkedQueue;
 
 import java.util.ArrayList;
 import java.util.Collections;

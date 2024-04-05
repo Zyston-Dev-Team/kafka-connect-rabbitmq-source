@@ -1,6 +1,6 @@
-package com.ibm.eventstreams.connect.rabbitmqsource;
+package com.zyston.eventstreams.connect.rabbitmqsource;
 
-import com.ibm.eventstreams.connect.rabbitmqsource.config.RabbitMQSourceConnectorConfig;
+import com.zyston.eventstreams.connect.rabbitmqsource.config.RabbitMQSourceConnectorConfig;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.Task;
 import org.apache.kafka.connect.source.SourceConnector;

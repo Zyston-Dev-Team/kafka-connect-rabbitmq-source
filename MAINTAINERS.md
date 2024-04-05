@@ -1,5 +1,9 @@
 # MAINTAINERS
 
+Ken Seal - kseal@zyston.com
+
+## Upstream
+
 Andrew Schofield - andrew_schofield@uk.ibm.com
 Kate Stanley - katheris@uk.ibm.com
 Jerome Boyer - boyerje@us.ibm.com

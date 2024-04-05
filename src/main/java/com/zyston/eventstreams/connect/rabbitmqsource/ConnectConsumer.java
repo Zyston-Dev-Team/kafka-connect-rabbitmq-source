@@ -1,8 +1,8 @@
-package com.ibm.eventstreams.connect.rabbitmqsource;
+package com.zyston.eventstreams.connect.rabbitmqsource;
 
-import com.ibm.eventstreams.connect.rabbitmqsource.config.RabbitMQSourceConnectorConfig;
-import com.ibm.eventstreams.connect.rabbitmqsource.sourcerecord.RabbitMQSourceRecordFactory;
-import com.ibm.eventstreams.connect.rabbitmqsource.sourcerecord.SourceRecordConcurrentLinkedQueue;
+import com.zyston.eventstreams.connect.rabbitmqsource.config.RabbitMQSourceConnectorConfig;
+import com.zyston.eventstreams.connect.rabbitmqsource.sourcerecord.RabbitMQSourceRecordFactory;
+import com.zyston.eventstreams.connect.rabbitmqsource.sourcerecord.SourceRecordConcurrentLinkedQueue;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Consumer;

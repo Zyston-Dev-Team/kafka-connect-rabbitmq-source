@@ -1,7 +1,7 @@
 {
     "name": "RabbitMQSourceConnector",
     "config": {
-        "connector.class": "com.ibm.eventstreams.connect.rabbitmqsource.RabbitMQSourceConnector",
+        "connector.class": "com.zyston.eventstreams.connect.rabbitmqsource.RabbitMQSourceConnector",
         "tasks.max": "10",
         "kafka.topic" : "kafka_test",
         "rabbitmq.queue" : "rabbitmq_test",
