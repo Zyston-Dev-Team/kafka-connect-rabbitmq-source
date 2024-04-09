@@ -1,4 +1,4 @@
-package com.ibm.eventstreams.connect.rabbitmqsource.schema;
+package com.zyston.eventstreams.connect.rabbitmqsource.schema;
 
 import com.rabbitmq.client.Envelope;
 import org.apache.kafka.connect.data.Schema;

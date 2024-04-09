@@ -8,7 +8,7 @@ The connector is supplied as source code which you can easily build into a JAR f
 1. Clone the repository with the following command:
 
 ```bash
-git@github.com:ibm-messaging/kafka-connect-rabbitmq-source.git
+git@github.com:zyston-messaging/kafka-connect-rabbitmq-source.git
 ```
 
 2. Change directory to the `kafka-connect-mq-source` directory:
@@ -70,7 +70,7 @@ Kafka Connect service by creating a JSON file in the format below:
 {
     "name": "RabbitMQSourceConnector",
     "config": {
-        "connector.class": "com.ibm.eventstreams.connect.rabbitmqsource.RabbitMQSourceConnector",
+        "connector.class": "com.zyston.eventstreams.connect.rabbitmqsource.RabbitMQSourceConnector",
         "tasks.max": "10",
         "kafka.topic" : "kafka_test",
         "rabbitmq.queue" : "rabbitmq_test",
@@ -130,7 +130,7 @@ kafka-console-consumer --topic kafka_test --from-beginning --bootstrap-server 12
 ```
 
 ## Issues and contributions
-For issues relating specifically to this connector, please use the [GitHub issue tracker](https://github.com/ibm-messaging/kafka-connect-jdbc-sink/issues). If you do want to submit a Pull Request related to this connector, please read the [contributing guide](CONTRIBUTING.md) first to understand how to sign your commits.
+For issues relating specifically to this connector, please use the [GitHub issue tracker](https://github.com/zyston-messaging/kafka-connect-jdbc-sink/issues). If you do want to submit a Pull Request related to this connector, please read the [contributing guide](CONTRIBUTING.md) first to understand how to sign your commits.
 
 
 ## License

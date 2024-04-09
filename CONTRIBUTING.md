@@ -6,13 +6,13 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 
 We are always thrilled to receive pull requests, and do our best to process them as fast as possible. Not sure if that typo is worth a pull request? Do it! We will appreciate it.
 
-To contribute code or documentation, please submit a [pull request](https://github.com/ibm-messaging/kafka-connect-rabbitmq-sink/pulls).
+To contribute code or documentation, please submit a [pull request](https://github.com/zyston-messaging/kafka-connect-rabbitmq-sink/pulls).
 
 A good way to familiarize yourself with the codebase and contribution process is
-to look for and tackle low-hanging fruit in the [issue tracker](https://github.com/ibm-messaging/kafka-connect-rabbitmq-sink/issues).
+to look for and tackle low-hanging fruit in the [issue tracker](https://github.com/zyston-messaging/kafka-connect-rabbitmq-sink/issues).
 
 ## Create issues...
-If you would like to implement a new feature, please [raise an issue](https://github.com/ibm-messaging/kafka-connect-rabbitmq-sink/issues)
+If you would like to implement a new feature, please [raise an issue](https://github.com/zyston-messaging/kafka-connect-rabbitmq-sink/issues)
 before sending a pull request so the feature can be discussed before you start working on it.
 
 > Note: We appreciate your effort, and want to avoid a situation where a contribution

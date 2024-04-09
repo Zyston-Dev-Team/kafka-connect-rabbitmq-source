@@ -1,17 +1,19 @@
-package com.ibm.eventstreams.connect.rabbitmqsource;
+package com.zyston.eventstreams.connect.rabbitmqsource;
 
-import com.ibm.eventstreams.connect.rabbitmqsource.config.RabbitMQSourceConnectorConfig;
-import com.ibm.eventstreams.connect.rabbitmqsource.schema.EnvelopeSchema;
-import com.ibm.eventstreams.connect.rabbitmqsource.sourcerecord.SourceRecordConcurrentLinkedQueue;
+import com.zyston.eventstreams.connect.rabbitmqsource.config.RabbitMQSourceConnectorConfig;
+import com.zyston.eventstreams.connect.rabbitmqsource.schema.EnvelopeSchema;
+import com.zyston.eventstreams.connect.rabbitmqsource.sourcerecord.SourceRecordConcurrentLinkedQueue;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.kafka.connect.errors.ConnectException;
-import org.apache.kafka.connect.errors.RetriableException;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
 
@@ -23,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RabbitMQSourceTask extends SourceTask {
+    public static final String OffsetHeader = "x-stream-offset";
     private static final Logger log = LoggerFactory.getLogger(RabbitMQSourceTask.class);
 
     RabbitMQSourceConnectorConfig config;
@@ -30,6 +33,10 @@ public class RabbitMQSourceTask extends SourceTask {
 
     private Channel channel;
     private Connection connection;
+
+    private Map<String, String> offsets;
+
+    private Long offsetValue;
 
     /**
      * Get the version of this task. Usually this should be the same as the corresponding {@link Connector} class's version.
@@ -64,12 +71,22 @@ public class RabbitMQSourceTask extends SourceTask {
             throw new ConnectException(e);
         }
 
+        offsets = new HashMap<>();
+
         for (String queue : this.config.queues) {
             try {
+                offsets.put(EnvelopeSchema.FIELD_ROUTINGKEY, queue);
+                if (this.context.offsetStorageReader().offset(offsets) != null) {
+                    this.context.offsetStorageReader().offset(offsets).forEach((key, value) -> {
+                        log.info("Offset Key: {}", key);
+                        log.info("Offset Value: {}", value);
+                    });
+                    offsetValue = (Long) this.context.offsetStorageReader().offset(offsets).get(OffsetHeader);
+                }
                 log.info("Setting channel.basicQos({}, {});", this.config.prefetchCount, this.config.prefetchGlobal);
                 this.channel.basicQos(this.config.prefetchCount, this.config.prefetchGlobal);
                 log.info("Starting consumer");
-                this.channel.basicConsume(queue, consumer);
+                this.channel.basicConsume(queue, false, Collections.singletonMap("x-stream-offset", Objects.requireNonNullElse(offsetValue, "first")), consumer);
             } catch (IOException ex) {
                 throw new ConnectException(ex);
             }
@@ -85,11 +102,16 @@ public class RabbitMQSourceTask extends SourceTask {
     @Override public List<SourceRecord> poll() throws InterruptedException {
         List<SourceRecord> batch = new ArrayList<>(4096);
 
-        while (!this.records.drain(batch)) {
+        log.debug("Polling ...");
+        if (!this.records.drain(batch)) {
             Thread.sleep(1000);
         }
 
-        return batch;
+        if (batch.isEmpty()) {
+            return null;
+        } else {
+            return batch;
+        }
     }
 
     /**
@@ -124,11 +146,16 @@ public class RabbitMQSourceTask extends SourceTask {
      * @throws InterruptedException
      */
     @Override public void commitRecord(SourceRecord record) throws InterruptedException {
-        Long deliveryTag = (Long) record.sourceOffset().get(EnvelopeSchema.FIELD_DELIVERYTAG);
+        final Long[] deliveryTag = new Long[1];
+        record.headers().forEach(header -> {
+            if (Objects.equals(header.key(), EnvelopeSchema.FIELD_DELIVERYTAG)) {
+                deliveryTag[0] = (Long) header.value();
+            }
+        });
         try {
-            this.channel.basicAck(deliveryTag, false);
+            this.channel.basicAck(deliveryTag[0], false);
         } catch (IOException e) {
-            throw new RetriableException(e);
+            throw new InterruptedException(e.getMessage());
         }
     }
 }

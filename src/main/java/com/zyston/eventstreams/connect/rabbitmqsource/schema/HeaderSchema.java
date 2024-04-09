@@ -1,4 +1,4 @@
-package com.ibm.eventstreams.connect.rabbitmqsource.schema;
+package com.zyston.eventstreams.connect.rabbitmqsource.schema;
 
 import com.google.common.collect.ImmutableMap;
 import com.rabbitmq.client.BasicProperties;

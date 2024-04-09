@@ -1,8 +1,8 @@
-package com.ibm.eventstreams.connect.rabbitmqsource;
+package com.zyston.eventstreams.connect.rabbitmqsource;
 
-import com.ibm.eventstreams.connect.rabbitmqsource.config.RabbitMQSourceConnectorConfig;
-import com.ibm.eventstreams.connect.rabbitmqsource.sourcerecord.RabbitMQSourceRecordFactory;
-import com.ibm.eventstreams.connect.rabbitmqsource.sourcerecord.SourceRecordConcurrentLinkedQueue;
+import com.zyston.eventstreams.connect.rabbitmqsource.config.RabbitMQSourceConnectorConfig;
+import com.zyston.eventstreams.connect.rabbitmqsource.sourcerecord.RabbitMQSourceRecordFactory;
+import com.zyston.eventstreams.connect.rabbitmqsource.sourcerecord.SourceRecordConcurrentLinkedQueue;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Consumer;
@@ -83,6 +83,8 @@ class ConnectConsumer implements Consumer {
      */
     @Override public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties basicProperties, byte[] bytes) throws IOException {
         log.trace("handleDelivery({})", consumerTag);
+        log.trace("Envelope: {}", envelope);
+        log.trace("Basic Properties: {}", basicProperties);
 
         SourceRecord sourceRecord = this.rabbitMQSourceRecordFactory.makeSourceRecord(consumerTag, envelope, basicProperties, bytes);
         this.records.add(sourceRecord);
