@@ -14,7 +14,6 @@ import java.util.Objects;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.kafka.connect.errors.ConnectException;
-import org.apache.kafka.connect.errors.RetriableException;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
 
@@ -26,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RabbitMQSourceTask extends SourceTask {
+    public static final String OffsetHeader = "x-stream-offset";
     private static final Logger log = LoggerFactory.getLogger(RabbitMQSourceTask.class);
 
     RabbitMQSourceConnectorConfig config;
@@ -81,9 +81,8 @@ public class RabbitMQSourceTask extends SourceTask {
                         log.info("Offset Key: {}", key);
                         log.info("Offset Value: {}", value);
                     });
-                    offsetValue = (Long) this.context.offsetStorageReader().offset(offsets).get(EnvelopeSchema.FIELD_DELIVERYTAG);
+                    offsetValue = (Long) this.context.offsetStorageReader().offset(offsets).get(OffsetHeader);
                 }
-                log.info("Offset value: {}", offsetValue);
                 log.info("Setting channel.basicQos({}, {});", this.config.prefetchCount, this.config.prefetchGlobal);
                 this.channel.basicQos(this.config.prefetchCount, this.config.prefetchGlobal);
                 log.info("Starting consumer");
@@ -103,11 +102,16 @@ public class RabbitMQSourceTask extends SourceTask {
     @Override public List<SourceRecord> poll() throws InterruptedException {
         List<SourceRecord> batch = new ArrayList<>(4096);
 
-        while (!this.records.drain(batch)) {
+        log.debug("Polling ...");
+        if (!this.records.drain(batch)) {
             Thread.sleep(1000);
         }
 
-        return batch;
+        if (batch.isEmpty()) {
+            return null;
+        } else {
+            return batch;
+        }
     }
 
     /**
@@ -142,11 +146,16 @@ public class RabbitMQSourceTask extends SourceTask {
      * @throws InterruptedException
      */
     @Override public void commitRecord(SourceRecord record) throws InterruptedException {
-        Long deliveryTag = (Long) record.sourceOffset().get(EnvelopeSchema.FIELD_DELIVERYTAG);
+        final Long[] deliveryTag = new Long[1];
+        record.headers().forEach(header -> {
+            if (Objects.equals(header.key(), EnvelopeSchema.FIELD_DELIVERYTAG)) {
+                deliveryTag[0] = (Long) header.value();
+            }
+        });
         try {
-            this.channel.basicAck(deliveryTag, false);
+            this.channel.basicAck(deliveryTag[0], false);
         } catch (IOException e) {
-            throw new RetriableException(e);
+            throw new InterruptedException(e.getMessage());
         }
     }
 }

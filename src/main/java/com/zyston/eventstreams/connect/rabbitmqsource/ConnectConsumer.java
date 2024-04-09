@@ -83,6 +83,8 @@ class ConnectConsumer implements Consumer {
      */
     @Override public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties basicProperties, byte[] bytes) throws IOException {
         log.trace("handleDelivery({})", consumerTag);
+        log.trace("Envelope: {}", envelope);
+        log.trace("Basic Properties: {}", basicProperties);
 
         SourceRecord sourceRecord = this.rabbitMQSourceRecordFactory.makeSourceRecord(consumerTag, envelope, basicProperties, bytes);
         this.records.add(sourceRecord);

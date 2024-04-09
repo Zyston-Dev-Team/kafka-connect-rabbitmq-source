@@ -19,9 +19,9 @@ import org.apache.kafka.connect.source.SourceRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.*;
 
+import static com.zyston.eventstreams.connect.rabbitmqsource.RabbitMQSourceTask.OffsetHeader;
 import static org.apache.kafka.connect.data.Schema.*;
 
 public class RabbitMQSourceRecordFactory {
@@ -91,7 +91,7 @@ public class RabbitMQSourceRecordFactory {
     public SourceRecord makeSourceRecord(String consumerTag, Envelope envelope, AMQP.BasicProperties basicProperties, byte[] bytes) throws JsonProcessingException {
         final String topic = this.config.kafkaTopic;
         final Map<String, ?> sourcePartition = Collections.singletonMap(EnvelopeSchema.FIELD_ROUTINGKEY, envelope.getRoutingKey());
-        final Map<String, ?> sourceOffset = Collections.singletonMap(EnvelopeSchema.FIELD_DELIVERYTAG, envelope.getDeliveryTag());
+        final Map<String, ?> sourceOffset = Collections.singletonMap(OffsetHeader, basicProperties.getHeaders().get(OffsetHeader));
 
         final Struct value = ValueSchema.toStruct(consumerTag, envelope, basicProperties, bytes);
 
@@ -99,6 +99,8 @@ public class RabbitMQSourceRecordFactory {
         if (basicProperties.getHeaders() != null) {
         	headers = toConnectHeaders(basicProperties.getHeaders());
         }
+        headers.add(toConnectHeader(EnvelopeSchema.FIELD_DELIVERYTAG, envelope.getDeliveryTag()));
+
         String messageBody = value.getString(ValueSchema.FIELD_MESSAGE_BODY);
 
         ObjectMapper mapper = new ObjectMapper();
