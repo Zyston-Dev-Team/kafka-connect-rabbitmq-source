@@ -2,7 +2,7 @@ name: global-spelling
 
 on:
   pull_request:
-    branches: [master]
+    branches: ["master"]
 
 jobs:
   spellcheck:
