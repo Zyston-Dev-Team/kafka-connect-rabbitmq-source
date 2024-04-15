@@ -1,6 +1,5 @@
 package com.zyston.eventstreams.connect.rabbitmqsource.schema;
 
-import com.google.common.collect.ImmutableMap;
 import com.rabbitmq.client.BasicProperties;
 import com.rabbitmq.client.LongString;
 import org.apache.kafka.connect.data.Schema;
@@ -56,7 +55,7 @@ public class HeaderSchema {
         fieldLookup.put(Boolean.class, Schema.Type.BOOLEAN.name().toLowerCase());
         fieldLookup.put(ArrayList.class, Schema.Type.ARRAY.name().toLowerCase());
         fieldLookup.put(Date.class, "timestamp");
-        FIELD_TYPE_LOOKUP = ImmutableMap.copyOf(fieldLookup);
+        FIELD_TYPE_LOOKUP = new HashMap<>(fieldLookup);
     }
 
     static Map<String, Struct> toStructMap(BasicProperties basicProperties) {
