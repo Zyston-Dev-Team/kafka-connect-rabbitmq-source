@@ -82,6 +82,8 @@ public class RabbitMQSourceTask extends SourceTask {
                         log.info("Offset Value: {}", value);
                     });
                     offsetValue = (Long) this.context.offsetStorageReader().offset(offsets).get(OffsetHeader);
+                } else {
+                    log.info("Offsets not found.");
                 }
                 log.info("Setting channel.basicQos({}, {});", this.config.prefetchCount, this.config.prefetchGlobal);
                 this.channel.basicQos(this.config.prefetchCount, this.config.prefetchGlobal);
